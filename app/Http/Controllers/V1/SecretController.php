@@ -20,6 +20,10 @@ class SecretController extends Controller
         return response()->json($secret);
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function delete(Request $request): JsonResponse
     {
 
