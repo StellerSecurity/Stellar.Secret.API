@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('secrets', function (Blueprint $table) {
             $table->string('id')->primary();
-            $table->string('message');
+            $table->text('message');
             $table->dateTime('expires_at')->nullable();
             $table->string('password')->nullable();
         });
