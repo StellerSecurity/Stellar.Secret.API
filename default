@@ -27,6 +27,7 @@ server {
         log_not_found off;
     }
 
+
     # Add locations of phpmyadmin here.
     location ~ [^/]\.php(/|$) {
         fastcgi_split_path_info ^(.+?\.php)(|/.*)$;
