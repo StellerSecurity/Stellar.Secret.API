@@ -43,6 +43,10 @@ class SecretController extends Controller
         return response()->json(['response_code' => 200]);
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function find(Request $request): JsonResponse
     {
         $secret = Secret::where('id', $request->input('id'))->first();
