@@ -11,4 +11,6 @@ class Secret extends Model
 
     protected $fillable = ['id', 'message', 'expires_at', 'password'];
 
+    public $timestamps = false;
+
 }

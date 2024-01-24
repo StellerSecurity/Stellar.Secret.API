@@ -4,6 +4,7 @@ namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\Controller;
 use App\Models\Secret;
+use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -16,7 +17,11 @@ class SecretController extends Controller
      */
     public function add(Request $request): JsonResponse
     {
-        $secret = Secret::add($request->all());
+        try {
+            $secret = Secret::create($request->all());
+        } catch (UniqueConstraintViolationException $constraintViolationException) {
+            return response()->json([]);
+        }
         return response()->json($secret);
     }
 
