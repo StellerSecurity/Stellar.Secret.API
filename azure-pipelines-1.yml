@@ -79,4 +79,4 @@ stages:
               appName: $(webAppName)
               runtimeStack: 'NODE|20.x'
               package: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
-              startUpCommand: 'npm run start'
+              startUpCommand: 'http-server ./www -p 8888'
