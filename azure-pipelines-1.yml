@@ -37,10 +37,9 @@ stages:
 
     - script: |
         npm install
-        ng add @angular/pwa
+        npm install -g @ionic/cli --skip-confirmation
         npm run build --if-present
-        npm run test --if-present
-        ionic build --prod
+        npm run test --if-present 
       displayName: 'npm install, build and test'
 
     - task: ArchiveFiles@2
