@@ -54,7 +54,7 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['stderr', 'daily', 'app-insights'],
+            'channels' => ['stderr', 'daily'],
             'ignore_exceptions' => false,
         ],
 
