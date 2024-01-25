@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4d6498d0fe697fffb3f91b48ae225922",
+    "content-hash": "9c491b8531eec05ba41a11d9276a5749",
     "packages": [
         {
             "name": "brick/math",
@@ -1047,16 +1047,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v10.41.0",
+            "version": "v10.42.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "da31969bd35e6ee0bbcd9e876f88952dc754b012"
+                "reference": "fef1aff874a6749c44f8e142e5764eab8cb96890"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/da31969bd35e6ee0bbcd9e876f88952dc754b012",
-                "reference": "da31969bd35e6ee0bbcd9e876f88952dc754b012",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/fef1aff874a6749c44f8e142e5764eab8cb96890",
+                "reference": "fef1aff874a6749c44f8e142e5764eab8cb96890",
                 "shasum": ""
             },
             "require": {
@@ -1248,7 +1248,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2024-01-16T15:23:58+00:00"
+            "time": "2024-01-23T15:07:56+00:00"
         },
         {
             "name": "laravel/prompts",
@@ -1892,107 +1892,6 @@
                 }
             ],
             "time": "2023-10-17T14:13:20+00:00"
-        },
-        {
-            "name": "mondago/application-insights",
-            "version": "0.5.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/mondago/ApplicationInsights-PHP",
-                "reference": "b6b7a8a443770e60a4d25dd442e64f03865b2c63"
-            },
-            "require": {
-                "guzzlehttp/guzzle": "^7.0.1",
-                "php": "^7.3|^8.0"
-            },
-            "require-dev": {
-                "evert/phpdoc-md": "~0.0.7",
-                "phpunit/phpunit": "^9.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "ApplicationInsights\\": "ApplicationInsights/"
-                }
-            },
-            "autoload-dev": {
-                "psr-4": {
-                    "ApplicationInsights\\Tests\\": "Tests/"
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "description": "This project extends the Application Insights API surface to support PHP.",
-            "homepage": "https://github.com/mondago/ApplicationInsights-PHP",
-            "keywords": [
-                "insights",
-                "log",
-                "logging",
-                "monitoring",
-                "telemetry"
-            ],
-            "time": "2021-10-28T14:27:56+00:00"
-        },
-        {
-            "name": "mondago/laravel-application-insights",
-            "version": "0.7.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/mondago/laravel-azure-application-insights",
-                "reference": "81cd3069bb287410ab5ffb7f15c21be04549f606"
-            },
-            "require": {
-                "laravel/framework": "^10.0",
-                "mondago/application-insights": "^0.5.1",
-                "monolog/monolog": "^3.0",
-                "php": "^8.1.0"
-            },
-            "require-dev": {
-                "nunomaduro/collision": "^6.0",
-                "orchestra/testbench": "^8.0",
-                "phpunit/phpunit": "^9.5.10"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Mondago\\ApplicationInsights\\ServiceProvider"
-                    ],
-                    "aliases": {
-                        "Insights": "Mondago\\ApplicationInsights\\Facade"
-                    }
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Mondago\\ApplicationInsights\\": "src"
-                }
-            },
-            "autoload-dev": {
-                "psr-4": {
-                    "Mondago\\ApplicationInsights\\Tests\\": "tests"
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Yanis Kross Yana",
-                    "email": "yanis.kross@gmail.com"
-                }
-            ],
-            "description": "A Laravel 8 package to send application insights to Microsoft Application Insights",
-            "homepage": "https://github.com/Mondago/laravel-application-insights",
-            "keywords": [
-                "Mondago",
-                "analytics",
-                "insights",
-                "laravel",
-                "monitoring"
-            ],
-            "time": "2023-03-15T10:08:04+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -6066,16 +5965,16 @@
         },
         {
             "name": "laravel/sail",
-            "version": "v1.27.1",
+            "version": "v1.27.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/sail.git",
-                "reference": "9dc648978e4276f2bfd37a076a52e3bd9394777f"
+                "reference": "2276a8d9d6cfdcaad98bf67a34331d100149d5b6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/sail/zipball/9dc648978e4276f2bfd37a076a52e3bd9394777f",
-                "reference": "9dc648978e4276f2bfd37a076a52e3bd9394777f",
+                "url": "https://api.github.com/repos/laravel/sail/zipball/2276a8d9d6cfdcaad98bf67a34331d100149d5b6",
+                "reference": "2276a8d9d6cfdcaad98bf67a34331d100149d5b6",
                 "shasum": ""
             },
             "require": {
@@ -6127,7 +6026,7 @@
                 "issues": "https://github.com/laravel/sail/issues",
                 "source": "https://github.com/laravel/sail"
             },
-            "time": "2024-01-13T18:46:48+00:00"
+            "time": "2024-01-21T17:13:42+00:00"
         },
         {
             "name": "mockery/mockery",
