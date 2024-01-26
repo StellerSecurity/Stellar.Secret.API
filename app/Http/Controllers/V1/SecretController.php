@@ -20,7 +20,7 @@ class SecretController extends Controller
         try {
             $secret = Secret::create($request->all());
         } catch (UniqueConstraintViolationException $constraintViolationException) {
-            return response()->json([]);
+            return response()->json(['response_code' => 400, 'response_message' => $constraintViolationException->getMessage()]);
         }
         return response()->json($secret);
     }
