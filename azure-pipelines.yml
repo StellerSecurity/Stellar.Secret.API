@@ -80,4 +80,4 @@ stages:
               package: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
               steps :
                 - script: |
-                  "php artisan schedule:run"
+                  php artisan schedule: run
