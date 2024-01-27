@@ -78,3 +78,6 @@ stages:
               azureSubscription: $(azureSubscription)
               appName: $(webAppName)
               package: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
+              steps:
+              - script: |
+                  php artisan schedule:run
