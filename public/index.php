@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 define('LARAVEL_START', microtime(true));
 
 if ($_SERVER['REQUEST_URI'] == '/') {
-    exit('Ah.');
+    exit('StellarSecretApiProd');
 }
 
 /*
