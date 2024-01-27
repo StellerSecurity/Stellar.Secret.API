@@ -79,5 +79,5 @@ stages:
               appName: $(webAppName)
               package: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
               steps:
-                - script:
+                - script: |
                   php artisan schedule:run
