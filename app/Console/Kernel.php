@@ -14,9 +14,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->call(function () {
+       /*$schedule->call(function () {
             Secret::where('expires_at','<', Carbon::now())->delete();
-        })->everyMinute();
+        })->everySecond();*/
     }
 
     /**

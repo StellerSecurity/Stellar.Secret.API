@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Secret;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,5 +16,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return "secret.";
+    return view('welcome');
 });

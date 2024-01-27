@@ -4,6 +4,7 @@ namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\Controller;
 use App\Models\Secret;
+use Carbon\Carbon;
 use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -49,6 +50,7 @@ class SecretController extends Controller
      */
     public function find(Request $request): JsonResponse
     {
+
         $secret = Secret::where('id', $request->input('id'))->first();
         return response()->json($secret);
     }

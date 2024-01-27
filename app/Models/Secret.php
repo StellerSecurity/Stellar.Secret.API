@@ -15,4 +15,5 @@ class Secret extends Model
 
     public $timestamps = false;
 
+
 }
