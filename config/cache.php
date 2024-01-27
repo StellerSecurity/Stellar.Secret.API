@@ -42,6 +42,10 @@ return [
             'serialize' => false,
         ],
 
+        'none' => [
+            'driver' => 'null',
+        ],
+
         'database' => [
             'driver' => 'database',
             'table' => 'cache',
