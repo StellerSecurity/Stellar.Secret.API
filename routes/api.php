@@ -25,6 +25,5 @@ Route::middleware(['basicAuth'])->group(function () {
                 Route::delete('delete', 'delete');
             });
         });
-
     });
 });
