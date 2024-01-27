@@ -21,7 +21,7 @@ class SecretController extends Controller
         try {
             $secret = Secret::create($request->all());
         } catch (UniqueConstraintViolationException $constraintViolationException) {
-            return response()->json(['response_code' => 400, 'response_message' => $constraintViolationException->getMessage()]);
+            return response()->json(['response_code' => 400, 'response_message' => 'Oh something is not sexy.']);
         }
         return response()->json($secret);
     }
@@ -53,6 +53,11 @@ class SecretController extends Controller
 
         $secret = Secret::where('id', $request->input('id'))->first();
         return response()->json($secret);
+    }
+
+    public function scheduler(Request $request)
+    {
+        Secret::where('expires_at','<', Carbon::now())->delete();
     }
 
 }
