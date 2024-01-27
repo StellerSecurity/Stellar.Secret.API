@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class Kernel extends ConsoleKernel
 {
+
     /**
      * Define the application's command schedule.
      */
