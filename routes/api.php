@@ -22,11 +22,18 @@ Route::middleware(['basicAuth'])->group(function () {
                 Route::post('add', 'add');
                 Route::get('secret', 'find');
                 Route::delete('delete', 'delete');
-                    Route::get('scheduler', 'scheduler');
+
             });
         });
     });
 
 
+    Route::prefix('v1')->group(function () {
+        Route::prefix('secretcontroller')->group(function () {
+            Route::controller(\App\Http\Controllers\V1\SecretController::class)->group(function () {
+                Route::delete('scheduler', 'scheduler');
+            });
+        });
+    });
 
 });
