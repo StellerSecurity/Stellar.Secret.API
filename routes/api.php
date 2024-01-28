@@ -27,13 +27,13 @@ Route::middleware(['basicAuth'])->group(function () {
         });
     });
 
+});
 
-    Route::prefix('v1')->group(function () {
-        Route::prefix('secretcontroller')->group(function () {
-            Route::controller(\App\Http\Controllers\V1\SecretController::class)->group(function () {
-                Route::get('scheduler', 'scheduler');
-            });
+Route::prefix('v1')->group(function () {
+    Route::prefix('secretcontroller')->group(function () {
+        Route::controller(\App\Http\Controllers\V1\SecretController::class)->group(function () {
+            Route::get('scheduler', 'scheduler');
         });
     });
-
 });
+
