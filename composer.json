@@ -20,6 +20,7 @@
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
+        "matthewbdaly/laravel-azure-storage": "^2.0",
         "mondago/laravel-application-insights": "^0.7.0"
     },
     "require-dev": {
