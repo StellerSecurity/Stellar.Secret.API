@@ -50,7 +50,7 @@ class SecretController extends Controller
         }
 
         $secret->delete();
-        FileUpload::where('secret_id', $request->input('secret_id'))->delete();
+        //FileUpload::where('secret_id', $request->input('secret_id'))->delete();
 
         return response()->json(['response_code' => 200]);
     }

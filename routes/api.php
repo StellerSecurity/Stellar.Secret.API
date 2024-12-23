@@ -26,12 +26,12 @@ Route::middleware(['basicAuth'])->group(function () {
             });
         });
 
-        Route::prefix('filesecretcontroller')->group(function () {
+        /*Route::prefix('filesecretcontroller')->group(function () {
             Route::controller(\App\Http\Controllers\V1\FileSecretController::class)->group(function () {
                 Route::get('find', 'find');
 
             });
-        });
+        });*/
 
     });
 
