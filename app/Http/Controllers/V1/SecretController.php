@@ -23,15 +23,15 @@ class SecretController extends Controller
         try {
             $secret = Secret::create($request->all());
 
-            $files = $request->input('files');
+            /*$files = $request->input('files');
 
             foreach ($files as $file) {
                 $file['secret_id'] = $secret->id;
                 $file = FileUpload::create($file);
-            }
+            }*/
 
         } catch (UniqueConstraintViolationException $constraintViolationException) {
-            return response()->json(['response_code' => 400, 'response_message' => 'Oh something is not sexy.']);
+            return response()->json(['response_code' => 400, 'response_message' => 'Constraint violation'], 400);
         }
         return response()->json($secret);
     }
