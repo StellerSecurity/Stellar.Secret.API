@@ -68,10 +68,16 @@ class SecretController extends Controller
             return response()->json(null);
         }
 
-        $secret = Secret::where('id', $request->input('id'))->first();
+        $secret = Secret::where('id', $id)->first();
+
         return response()->json($secret);
     }
 
+    /**
+     * Runs by Azure functions.
+     * @param Request $request
+     * @return void
+     */
     public function scheduler(Request $request): void
     {
         Secret::where('expires_at','<', Carbon::now())->delete();
