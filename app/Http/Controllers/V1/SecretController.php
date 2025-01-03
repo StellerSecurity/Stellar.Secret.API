@@ -21,7 +21,7 @@ class SecretController extends Controller
     public function add(Request $request): JsonResponse
     {
         try {
-            $secret = Secret::create($request->all());
+            $secret = Secret::create($request->only(['id', 'message', 'expires_at', 'password']));
 
             /*$files = $request->input('files');
 
