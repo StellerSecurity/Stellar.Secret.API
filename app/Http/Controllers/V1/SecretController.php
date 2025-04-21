@@ -31,10 +31,10 @@ class SecretController extends Controller
             foreach($files as $file) {
                 // currently, we only support one file, might change it in the future.
                 if($fileNumber > 0) break;
-                if(!isset($file->id) || !isset($file->content)) continue;
+                if(!isset($file['id']) || !isset($file['content'])) continue;
 
                 // NOTICE: Azure storage will check MAX_FILE_SIZE_MB.
-                Storage::disk('azure')->put($file->id, $file->content);
+                Storage::disk('azure')->put($file['id'], $file['id']);
                 $fileNumber++;
             }
 
