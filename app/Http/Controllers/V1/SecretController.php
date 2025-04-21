@@ -33,6 +33,7 @@ class SecretController extends Controller
                 if($fileNumber > 0) break;
                 if(!isset($file->id) || !isset($file->content)) continue;
 
+                // NOTICE: Azure storage will check MAX_FILE_SIZE_MB.
                 Storage::disk('azure')->put($file->id, $file->content);
                 $fileNumber++;
             }
