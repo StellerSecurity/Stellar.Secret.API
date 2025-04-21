@@ -27,15 +27,17 @@ class SecretController extends Controller
             $secret = Secret::create($request->only(['id', 'message', 'expires_at', 'password']));
 
             $files = $request->input('files');
-            $fileNumber = 0;
-            foreach($files as $file) {
-                // currently, we only support one file, might change it in the future.
-                if($fileNumber > 0) break;
-                if(!isset($file->id) || !isset($file->content)) continue;
+            if(is_array($files)) {
+                $fileNumber = 0;
+                foreach($files as $file) {
+                    // currently, we only support one file, might change it in the future.
+                    if($fileNumber > 0) break;
+                    if(!isset($file['id']) || !isset($file['content'])) continue;
 
-                // NOTICE: Azure storage will check MAX_FILE_SIZE_MB.
-                Storage::disk('azure')->put($file->id, $file->content);
-                $fileNumber++;
+                    // NOTICE: Azure storage will check MAX_FILE_SIZE_MB.
+                    Storage::disk('azure')->put($file['id'], $file['id']);
+                    $fileNumber++;
+                }
             }
 
         } catch (UniqueConstraintViolationException $constraintViolationException) {
