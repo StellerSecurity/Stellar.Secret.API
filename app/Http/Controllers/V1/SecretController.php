@@ -10,6 +10,7 @@ use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class SecretController extends Controller
 {
@@ -20,15 +21,19 @@ class SecretController extends Controller
      */
     public function add(Request $request): JsonResponse
     {
+
+
         try {
             $secret = Secret::create($request->only(['id', 'message', 'expires_at', 'password']));
 
-            /*$files = $request->input('files');
-
-            foreach ($files as $file) {
-                $file['secret_id'] = $secret->id;
-                $file = FileUpload::create($file);
-            }*/
+            $files = $request->input('files');
+            $fileNumber = 0;
+            foreach($files as $file) {
+                // currently, we only support one file, might change it in the future.
+                if($fileNumber > 0) break;
+                Storage::disk('azure')->put($file->id, $file->content);
+                $fileNumber++;
+            }
 
         } catch (UniqueConstraintViolationException $constraintViolationException) {
             return response()->json(['response_code' => 400, 'response_message' => 'Constraint violation'], 400);
