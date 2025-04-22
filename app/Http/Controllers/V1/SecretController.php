@@ -60,7 +60,13 @@ class SecretController extends Controller
     public function delete(Request $request): JsonResponse
     {
 
-        $secret = Secret::where('id', $request->input('id'))->first();
+        $id = $request->input('id');
+
+        if($id === null) {
+            return response()->json(null);
+        }
+
+        $secret = Secret::where('id', $id)->first();
 
         if($secret === null) {
             return response()->json(['response_code' => Response::HTTP_BAD_REQUEST]);
