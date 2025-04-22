@@ -22,10 +22,6 @@ server {
         root   /html/;
     }
 
-    http {
-        client_max_body_size 15M;
-    }
-
     # Disable .git directory
     location ~ /\.git {
         deny all;
