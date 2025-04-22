@@ -111,7 +111,17 @@ class SecretController extends Controller
      */
     public function scheduler(Request $request): void
     {
-        Secret::where('expires_at','<', Carbon::now())->delete();
+
+        $secrets = Secret::where('expires_at','<', Carbon::now())->get();
+
+        foreach($secrets as $secret) {
+            $secret->delete();
+            $file = $this->externalStorageService->file($secret->id);
+            if($file->status() !== null && $file->status() == Response::HTTP_OK) {
+                Storage::disk('azure')->delete($secret->id);
+            }
+        }
+
     }
 
 }
