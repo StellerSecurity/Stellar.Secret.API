@@ -94,12 +94,12 @@ class SecretController extends Controller
 
         $file = $this->externalStorageService->file($id);
         if($file === null || $file->status() !== null && $file->status() !== Response::HTTP_OK) {
-            $files = null;
+            $fileIds = null;
         } else {
-            $files[] = $id;
+            $fileIds[] = $id;
         }
 
-        $secret->files = $files;
+        $secret->fileIds = $fileIds;
 
         return response()->json($secret);
     }
