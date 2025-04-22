@@ -33,7 +33,7 @@ class FileSecretController
             $file = $this->externalStorageService->file($fileId);
 
             if($file !== null && $file->status() !== null && $file->status() == Response::HTTP_OK) {
-                $files[] = $file->effectiveUri();
+                $files[] = ['url' => $file->effectiveUri(), 'content' => $file->body()];
             }
         }
 
