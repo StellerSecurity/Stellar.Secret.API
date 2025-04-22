@@ -118,6 +118,7 @@ class SecretController extends Controller
             $secret->delete();
             $file = $this->externalStorageService->file($secret->id);
             if($file->status() !== null && $file->status() == Response::HTTP_OK) {
+                // TODO: Add a fall-back? Currently relying on Azure storage blob auto-deletion after x-day - if the below does not run.
                 Storage::disk('azure')->delete($secret->id);
             }
         }
