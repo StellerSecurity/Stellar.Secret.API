@@ -22,16 +22,15 @@ Route::middleware(['basicAuth'])->group(function () {
                 Route::post('add', 'add');
                 Route::get('secret', 'find');
                 Route::delete('delete', 'delete');
-
             });
         });
 
-        /*Route::prefix('filesecretcontroller')->group(function () {
+        Route::prefix('filesecretcontroller')->group(function () {
             Route::controller(\App\Http\Controllers\V1\FileSecretController::class)->group(function () {
-                Route::get('find', 'find');
-
+                Route::post('find', 'find');
+                Route::delete('delete', 'delete');
             });
-        });*/
+        });
 
     });
 
