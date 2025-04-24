@@ -33,6 +33,11 @@ class SecretController extends Controller
 
         $message = $request->input('message');
         $files = $request->input('files');
+        $id = $request->input('id');
+
+        if(empty($id)) {
+            return response()->json(['response_code' => Response::HTTP_BAD_REQUEST, 'response_message' => 'ID is empty'], Response::HTTP_BAD_REQUEST);
+        }
 
         if(empty($message) && empty($files)) {
             return response()->json(['response_code' => Response::HTTP_BAD_REQUEST, 'response_message' => 'Message && files is empty.'], Response::HTTP_BAD_REQUEST);
@@ -132,7 +137,7 @@ class SecretController extends Controller
             $secret->delete();
             $file = $this->externalStorageService->file($secret->id);
             if($file->status() !== null && $file->status() == Response::HTTP_OK) {
-                SecretFileUploadHelper::deleteIfFailedTryAgain($secret->id);
+                SecretFileUploadHelper::deleteIfFailedTryAgain  ($secret->id);
             }
         }
 
