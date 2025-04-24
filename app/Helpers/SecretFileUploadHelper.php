@@ -2,13 +2,17 @@
 
 namespace App\Helpers;
 
+use App\Jobs\ProcessDeleteSecretFile;
+use Illuminate\Support\Facades\Storage;
+
 class SecretFileUploadHelper
 {
+    public static function deleteIfFailedTryAgain(string $fileId): bool {
+        $deleted = Storage::disk('azure')->delete($fileId);
 
-    const MAX_FILE_SIZE_MB = 15;
+        if(!$deleted) {
+            ProcessDeleteSecretFile::dispatch($fileId)->delay(now()->addSeconds(60));
+        }
 
-    public static function getMaxSizeInMB(): int {
-        return self::MAX_FILE_SIZE_MB;
     }
-
 }

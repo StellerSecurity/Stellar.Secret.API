@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\V1;
 
+use App\Helpers\SecretFileUploadHelper;
 use App\Http\Controllers\Controller;
 use App\Models\FileUpload;
 use App\Models\Secret;
@@ -30,10 +31,16 @@ class SecretController extends Controller
     public function add(Request $request): JsonResponse
     {
 
+        $message = $request->input('message');
+        $files = $request->input('files');
+
+        if(empty($message) && empty($files)) {
+            return response()->json(['response_code' => Response::HTTP_BAD_REQUEST, 'response_message' => 'Message && files is empty.'], Response::HTTP_BAD_REQUEST);
+        }
+
         try {
             $secret = Secret::create($request->only(['id', 'message', 'expires_at', 'password']));
 
-            $files = $request->input('files');
             if(is_array($files)) {
                 $fileNumber = 0;
                 foreach($files as $file) {
@@ -50,6 +57,7 @@ class SecretController extends Controller
         } catch (UniqueConstraintViolationException $constraintViolationException) {
             return response()->json(['response_code' => Response::HTTP_BAD_REQUEST, 'response_message' => 'Constraint violation'], Response::HTTP_BAD_REQUEST);
         }
+
         return response()->json($secret);
     }
 
@@ -124,11 +132,7 @@ class SecretController extends Controller
             $secret->delete();
             $file = $this->externalStorageService->file($secret->id);
             if($file->status() !== null && $file->status() == Response::HTTP_OK) {
-                // TODO: Add a fall-back? Currently relying on Azure storage blob auto-deletion after x-day - if the below does not run.
-                $deleted = Storage::disk('azure')->delete($secret->id);
-                if(!$deleted) {
-                    // TODO: QUEUE TO TRY AGAIN?
-                }
+                SecretFileUploadHelper::deleteIfFailedTryAgain($secret->id);
             }
         }
 

@@ -1,7 +1,9 @@
 <?php
 
+use App\Jobs\ProcessDeleteSecretFile;
 use App\Models\Secret;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,5 +18,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
+    Artisan::call('queue:work');
     return "";
 });
