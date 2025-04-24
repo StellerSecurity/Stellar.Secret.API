@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    Artisan::call('queue:work');
+
+    //Artisan::call('queue:work');
     return "";
 });
