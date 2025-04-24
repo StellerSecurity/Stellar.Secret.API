@@ -19,6 +19,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
 
-    //Artisan::call('queue:work');
+    Artisan::call('queue:work --stop-when-empty');
     return "";
 });
