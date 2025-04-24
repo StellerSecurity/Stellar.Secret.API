@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Storage;
 
 class SecretFileUploadHelper
 {
-    public static function deleteIfFailedTryAgain(string $fileId): bool {
+    public static function deleteIfFailedTryAgain(string $fileId): void {
         $deleted = Storage::disk('azure')->delete($fileId);
 
         if(!$deleted) {
