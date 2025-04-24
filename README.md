@@ -1,6 +1,6 @@
 <h1>Stellar Secret API</h1>
 <p>This API handles database storage and external file storage for any uploaded files.</p>
-<p>The API cannot see any messages and files since everything is encrypted on the client-side. Only those knowing the secret URL can decrypt the data.</p>
+<p>The API cannot see any messages and files since everything is encrypted on the client-side. Only those knowing the secret URL or the user-defined password can decrypt the data</p>
 
 <h2>Data Model</h2><br>
 * ID is stored hashed with sha512 into the DB.<br>
