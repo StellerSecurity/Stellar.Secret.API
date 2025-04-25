@@ -137,7 +137,7 @@ class SecretController extends Controller
             $secret->delete();
             $file = $this->externalStorageService->file($secret->id);
             if($file->status() !== null && $file->status() == Response::HTTP_OK) {
-                SecretFileUploadHelper::deleteIfFailedTryAgain  ($secret->id);
+                SecretFileUploadHelper::deleteIfFailedTryAgain($secret->id);
             }
         }
 
