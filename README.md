@@ -4,6 +4,6 @@
 
 <h2>Data Model</h2><br>
 * ID is stored hashed with sha512 into the DB.<br>
-* Message is encrypted either by the ID generated on the UI-part or the user-custom password. The same goes with File (notice: file is not stored into the DB).<br>
+* Message is encrypted either by the ID generated on the UI-part or the user-custom password. The same goes with File (notice: file is not stored into the DB) but in our case Azure-blob-storage (might add multiple external-storage providers in future). Any access to Azure blob storage does not mean anything, since the files is encrypted with the user-defined password or the ID (which even with DB-access does not reveal anything as the ID is hashed)<br>
 * Password is the user password for encrypting the data. It is stored hashed with sha512 - in future, we will remove the column, since we dont need it.<br>
 * Expires_at is not encrypted, since we use this info to automatically delete a Secret in-case a link haven't been opened by the receiver. The deletion is done by Scheduler.<br>
