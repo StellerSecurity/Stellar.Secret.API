@@ -86,12 +86,12 @@ class SecretController extends Controller
             return response()->json(['response_code' => Response::HTTP_BAD_REQUEST]);
         }
 
-        $secret->delete();
-
         $file = $this->externalStorageService->file($secret->id);
         if($file->status() !== null && $file->status() == Response::HTTP_OK) {
             SecretFileUploadHelper::deleteIfFailedTryAgain($secret->id);
         }
+
+        $secret->delete();
 
         //FileUpload::where('secret_id', $request->input('secret_id'))->delete();
 
