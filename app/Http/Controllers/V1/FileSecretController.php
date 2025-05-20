@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\V1;
 
+use App\Helpers\SecretFileUploadHelper;
 use App\Services\ExternalStorageService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -51,7 +52,7 @@ class FileSecretController
         }
 
         foreach($fileIds as $fileId) {
-            Storage::disk('azure')->delete($fileId);
+            SecretFileUploadHelper::deleteIfFailedTryAgain($fileId);
         }
 
         return response()->json(['response_code' => Response::HTTP_OK]);

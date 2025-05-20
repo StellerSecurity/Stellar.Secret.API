@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\V1;
 
+use App\Helpers\SecretFileUploadHelper;
 use App\Http\Controllers\Controller;
 use App\Models\FileUpload;
 use App\Models\Secret;
@@ -30,10 +31,21 @@ class SecretController extends Controller
     public function add(Request $request): JsonResponse
     {
 
+        $message = $request->input('message');
+        $files = $request->input('files');
+        $id = $request->input('id');
+
+        if(empty($id)) {
+            return response()->json(['response_code' => Response::HTTP_BAD_REQUEST, 'response_message' => 'ID is empty'], Response::HTTP_BAD_REQUEST);
+        }
+
+        if(empty($message) && empty($files)) {
+            return response()->json(['response_code' => Response::HTTP_BAD_REQUEST, 'response_message' => 'Message && files is empty.'], Response::HTTP_BAD_REQUEST);
+        }
+
         try {
             $secret = Secret::create($request->only(['id', 'message', 'expires_at', 'password']));
 
-            $files = $request->input('files');
             if(is_array($files)) {
                 $fileNumber = 0;
                 foreach($files as $file) {
@@ -51,6 +63,7 @@ class SecretController extends Controller
         } catch (UniqueConstraintViolationException $constraintViolationException) {
             return response()->json(['response_code' => Response::HTTP_BAD_REQUEST, 'response_message' => 'Constraint violation'], Response::HTTP_BAD_REQUEST);
         }
+
         return response()->json($secret);
     }
 
@@ -61,7 +74,13 @@ class SecretController extends Controller
     public function delete(Request $request): JsonResponse
     {
 
-        $secret = Secret::where('id', $request->input('id'))->first();
+        $id = $request->input('id');
+
+        if($id === null) {
+            return response()->json(null);
+        }
+
+        $secret = Secret::where('id', $id)->first();
 
         if($secret === null) {
             return response()->json(['response_code' => Response::HTTP_BAD_REQUEST]);
@@ -112,7 +131,17 @@ class SecretController extends Controller
      */
     public function scheduler(Request $request): void
     {
-        Secret::where('expires_at','<', Carbon::now())->delete();
+
+        $secrets = Secret::where('expires_at','<', Carbon::now())->get();
+
+        foreach($secrets as $secret) {
+            $secret->delete();
+            $file = $this->externalStorageService->file($secret->id);
+            if($file->status() !== null && $file->status() == Response::HTTP_OK) {
+                SecretFileUploadHelper::deleteIfFailedTryAgain($secret->id);
+            }
+        }
+
     }
 
 }

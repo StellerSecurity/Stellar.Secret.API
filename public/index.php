@@ -6,11 +6,6 @@ use Illuminate\Http\Request;
 
 define('LARAVEL_START', microtime(true));
 
-if ($_SERVER['REQUEST_URI'] == '/') {
-
-    exit('StellarSecretApiProd');
-}
-
 /*
 |--------------------------------------------------------------------------
 | Check If The Application Is Under Maintenance
