@@ -54,6 +54,7 @@ class SecretController extends Controller
                     if(!isset($file['id']) || !isset($file['content'])) continue;
 
                     // NOTICE: Azure storage will check MAX_FILE_SIZE_MB && take care of auto-deletion if the user does not open the secret-link for some reason after a period of time.
+                    // Azure storage will only delete if Scheduler for some reason does not run or fails.
                     Storage::disk('azure')->put($file['id'], $file['content']);
                     $fileNumber++;
                 }
