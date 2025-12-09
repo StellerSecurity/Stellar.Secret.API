@@ -35,13 +35,27 @@ class SecretController extends Controller
         $files = $request->input('files');
         $id = $request->input('id');
 
-        if(empty($id)) {
-            return response()->json(['response_code' => Response::HTTP_BAD_REQUEST, 'response_message' => 'ID is empty'], Response::HTTP_BAD_REQUEST);
+        if (empty($id)) {
+            return response()->json([
+                'response_code'    => Response::HTTP_BAD_REQUEST,
+                'response_message' => 'ID is empty',
+            ], Response::HTTP_BAD_REQUEST);
         }
 
-        if(empty($message) && empty($files)) {
-            return response()->json(['response_code' => Response::HTTP_BAD_REQUEST, 'response_message' => 'Message && files is empty.'], Response::HTTP_BAD_REQUEST);
+        if (strlen($id) < 16) {
+            return response()->json([
+                'response_code'    => Response::HTTP_BAD_REQUEST,
+                'response_message' => 'ID is too short',
+            ], Response::HTTP_BAD_REQUEST);
         }
+
+        if (empty($message) && empty($files)) {
+            return response()->json([
+                'response_code'    => Response::HTTP_BAD_REQUEST,
+                'response_message' => 'Message && files is empty.',
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
 
         try {
             $secret = Secret::create($request->only(['id', 'message', 'expires_at', 'password']));
@@ -77,7 +91,7 @@ class SecretController extends Controller
         $id = $request->input('id');
 
         if($id === null) {
-            return response()->json(null);
+            return response()->json(null, 400);
         }
 
         $secret = Secret::where('id', $id)->first();
@@ -99,24 +113,23 @@ class SecretController extends Controller
      */
     public function find(Request $request): JsonResponse
     {
-
         $id = $request->input('id');
 
-        if($id === null) {
+        if ($id === null) {
             return response()->json(null);
         }
 
         $secret = Secret::where('id', $id)->first();
 
-        if($secret === null) {
+        if ($secret === null) {
             return response()->json(null);
         }
 
-        $file = $this->externalStorageService->file($id);
-        if($file === null || $file->status() !== null && $file->status() !== Response::HTTP_OK) {
-            $fileIds = null;
-        } else {
-            $fileIds[] = $id;
+        $fileIds = null;
+        $file    = $this->externalStorageService->file($id);
+
+        if ($file !== null && ($file->status() === null || $file->status() === Response::HTTP_OK)) {
+            $fileIds = [$id];
         }
 
         $secret->fileIds = $fileIds;
@@ -137,7 +150,7 @@ class SecretController extends Controller
         foreach($secrets as $secret) {
             $secret->delete();
             $file = $this->externalStorageService->file($secret->id);
-            if($file->status() !== null && $file->status() == Response::HTTP_OK) {
+            if ($file !== null && $file->status() === Response::HTTP_OK) {
                 SecretFileUploadHelper::deleteIfFailedTryAgain($secret->id);
             }
         }
