@@ -8,12 +8,16 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Storage;
+use RuntimeException;
 
 class ProcessDeleteSecretFile implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private int $max_attempts = 5;
+    /**
+     * Laravel will automatically retry the job up to this number of times.
+     */
+    public int $tries = 5;
 
     private string $fileId;
 
@@ -30,8 +34,15 @@ class ProcessDeleteSecretFile implements ShouldQueue
      */
     public function handle(): void
     {
-        if ($this->attempts() > $this->max_attempts) {
-            Storage::disk('azure')->delete($this->fileId);
+        // Attempt to delete the file from Azure storage
+        $deleted = Storage::disk('azure')->delete($this->fileId);
+
+        if (! $deleted) {
+            // Throwing an exception tells Laravel:
+            // "Retry this job until max attempts have been reached"
+            throw new RuntimeException("Failed to delete secret file {$this->fileId}");
         }
+
+        // If deletion succeeded, job is finished.
     }
 }
