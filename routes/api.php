@@ -20,7 +20,7 @@ Route::middleware(['basicAuth'])->group(function () {
         Route::prefix('secretcontroller')->group(function () {
                 Route::controller(\App\Http\Controllers\V1\SecretController::class)->group(function () {
                 Route::post('add', 'add');
-                Route::get('secret', 'find');
+                Route::post('view', 'find');
                 Route::delete('delete', 'delete');
             });
         });
