@@ -6,14 +6,21 @@ use Illuminate\Database\Eloquent\Model;
 
 class Secret extends Model
 {
-
-    protected $table = "secrets";
+    protected $table = 'secrets';
 
     public $incrementing = false;
 
-    protected $fillable = ['id', 'message', 'expires_at', 'password'];
+    protected $fillable = [
+        'id',
+        'message',
+        'expires_at',
+        'has_password',
+    ];
+
+    protected $casts = [
+        'has_password' => 'boolean',
+        'expires_at'   => 'datetime',
+    ];
 
     public $timestamps = false;
-
-
 }
