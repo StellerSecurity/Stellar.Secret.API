@@ -15,6 +15,7 @@ class Secret extends Model
         'message',
         'expires_at',
         'has_password',
+        'encryption_version'
     ];
 
     protected $casts = [

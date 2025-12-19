@@ -25,11 +25,43 @@ class SecretController extends Controller
      */
     public function add(Request $request): JsonResponse
     {
-        $message      = $request->input('message');
-        $files        = $request->input('files');
-        $id           = $request->input('id');
-        $expiresAt    = $request->input('expires_at');
-        $hasPassword  = (bool) $request->input('has_password', false);
+        $message   = $request->input('message');
+        $files     = $request->input('files');
+        $id        = $request->input('id');
+
+        $hasPassword = (bool) $request->input('has_password', false);
+
+        $encryptionVersion = strtolower(trim((string) $request->input('encryption_version', 'v1')));
+        if (! in_array($encryptionVersion, ['v1', 'v2'], true)) {
+            return response()->json([
+                'response_code'    => Response::HTTP_BAD_REQUEST,
+                'response_message' => 'Invalid encryption_version',
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        // Your client sends expires_at as "0", "1", "6", "24" (hours), not a datetime.
+        $expiresAtRaw = $request->input('expires_at');
+        $expiresAt = null;
+
+        if ($expiresAtRaw !== null) {
+            $expiresAtRaw = trim((string) $expiresAtRaw);
+
+            if ($expiresAtRaw !== '' && $expiresAtRaw !== '0') {
+                if (ctype_digit($expiresAtRaw)) {
+                    $hours = (int) $expiresAtRaw;
+                    $expiresAt = Carbon::now()->addHours($hours);
+                } else {
+                    try {
+                        $expiresAt = Carbon::parse($expiresAtRaw);
+                    } catch (\Throwable $e) {
+                        return response()->json([
+                            'response_code'    => Response::HTTP_BAD_REQUEST,
+                            'response_message' => 'Invalid expires_at',
+                        ], Response::HTTP_BAD_REQUEST);
+                    }
+                }
+            }
+        }
 
         if (empty($id)) {
             return response()->json([
@@ -54,17 +86,17 @@ class SecretController extends Controller
 
         try {
             $secret = Secret::create([
-                'id'           => $id,
-                'message'      => $message,
-                'expires_at'   => $expiresAt,
-                'has_password' => $hasPassword,
+                'id'                 => $id,
+                'message'            => $message,
+                'expires_at'         => $expiresAt,
+                'has_password'       => $hasPassword,
+                'encryption_version' => $encryptionVersion,
             ]);
 
             if (is_array($files)) {
                 $fileNumber = 0;
 
                 foreach ($files as $file) {
-                    // currently, we only support one file, might change it in the future.
                     if ($fileNumber > 0) {
                         break;
                     }
@@ -73,13 +105,11 @@ class SecretController extends Controller
                         continue;
                     }
 
-                    // Azure storage will check MAX_FILE_SIZE_MB && auto-deletion.
                     Storage::disk('azure')->put($file['id'], $file['content']);
                     $fileNumber++;
                 }
             }
         } catch (\Throwable $e) {
-            // Hvis der er unique constraint eller andet lort, så returner bare 400.
             Log::warning('Secret create failed', ['error' => $e->getMessage()]);
 
             return response()->json([
@@ -90,6 +120,7 @@ class SecretController extends Controller
 
         return response()->json($secret);
     }
+
 
     /**
      * @param Request $request
