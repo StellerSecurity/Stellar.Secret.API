@@ -39,29 +39,8 @@ class SecretController extends Controller
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        // Your client sends expires_at as "0", "1", "6", "24" (hours), not a datetime.
-        $expiresAtRaw = $request->input('expires_at');
-        $expiresAt = null;
 
-        if ($expiresAtRaw !== null) {
-            $expiresAtRaw = trim((string) $expiresAtRaw);
-
-            if ($expiresAtRaw !== '' && $expiresAtRaw !== '0') {
-                if (ctype_digit($expiresAtRaw)) {
-                    $hours = (int) $expiresAtRaw;
-                    $expiresAt = Carbon::now()->addHours($hours);
-                } else {
-                    try {
-                        $expiresAt = Carbon::parse($expiresAtRaw);
-                    } catch (\Throwable $e) {
-                        return response()->json([
-                            'response_code'    => Response::HTTP_BAD_REQUEST,
-                            'response_message' => 'Invalid expires_at',
-                        ], Response::HTTP_BAD_REQUEST);
-                    }
-                }
-            }
-        }
+        $expiresAt = $request->input('expires_at');
 
         if (empty($id)) {
             return response()->json([
