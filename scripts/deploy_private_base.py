@@ -133,7 +133,7 @@ def prepare(api, name, state_path):
     rules = before.get('scmIpSecurityRestrictions', []) + [{
         'name': name, 'action': 'Allow', 'tag': 'Default',
         'ipAddress': str(address) + '/32', 'priority': 90,
-        'description': 'Temporary deployment runner; removed by always-run cleanup'}]
+        'description': 'Temporary deployment runner - removed by always-run cleanup'}]
     try:
         api.write_scm(rules)
         after = api.read()
