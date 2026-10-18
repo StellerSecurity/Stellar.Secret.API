@@ -42,6 +42,9 @@ stages:
       workingDirectory: $(rootFolder)
       displayName: 'Use PHP version $(phpVersion)'
 
+    - script: python3 -B -m unittest discover -s scripts -p 'test_*.py'
+      displayName: 'Test scoped SCM access and cleanup'
+
     - script: composer install --no-interaction --prefer-dist --optimize-autoloader
       workingDirectory: $(rootFolder)
       displayName: 'Composer install'
@@ -65,6 +68,8 @@ stages:
   condition: succeeded()
   jobs:
   - deployment: DeploymentJob
+    timeoutInMinutes: 20
+    cancelTimeoutInMinutes: 5
     pool:
       vmImage: $(vmImageName)
     environment: $(environmentName)
@@ -72,6 +77,11 @@ stages:
       runOnce:
         deploy:
           steps:
+          - checkout: self
+          - script: python3 scripts/deploy_private_base.py prepare
+            displayName: 'Allow this runner only on SCM'
+            env:
+              SYSTEM_ACCESSTOKEN: $(System.AccessToken)
           - task: AzureWebApp@1
             displayName: 'Deploy Azure Web App : stellarSecretApiProd'
             inputs:
@@ -79,3 +89,8 @@ stages:
               appName: $(webAppName)
               appType: webAppLinux
               package: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
+          - script: python3 scripts/deploy_private_base.py cleanup
+            displayName: 'Remove and verify temporary SCM access'
+            condition: always()
+            env:
+              SYSTEM_ACCESSTOKEN: $(System.AccessToken)
