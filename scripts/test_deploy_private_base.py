@@ -78,6 +78,13 @@ class DeploymentTests(unittest.TestCase):
             self.prepare(b'10.1.2.3')
         self.assertEqual(0, self.api.writes)
 
+    def test_http_failure_reports_status_without_sensitive_body(self):
+        error = deployment.urllib.error.HTTPError(deployment.RESOURCE, 400, 'secret', {},
+                                                 io.BytesIO(b'private response'))
+        with patch.object(deployment.urllib.request, 'urlopen', side_effect=error):
+            with self.assertRaisesRegex(RuntimeError, '^Azure configuration PATCH failed with HTTP 400$'):
+                deployment.request(deployment.RESOURCE, 'PATCH', b'{}')
+
     def test_cleanup_is_idempotent(self):
         deployment.cleanup(self.api, 'stellar-deploy-123')
         deployment.cleanup(self.api, 'stellar-deploy-123')
