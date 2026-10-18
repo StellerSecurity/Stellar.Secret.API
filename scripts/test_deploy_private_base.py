@@ -45,6 +45,7 @@ class DeploymentTests(unittest.TestCase):
         self.prepare()
         self.assertEqual(deployment.main_rules(self.original), deployment.main_rules(self.api.read()))
         self.assertEqual(self.api.read()['scmIpSecurityRestrictions'][-1]['ipAddress'], '20.1.2.3/32')
+        self.assertEqual(self.api.read()['scmIpSecurityRestrictions'][-1]['tag'], 'Default')
         deployment.cleanup(self.api, 'stellar-deploy-123', deployment.main_rules(self.original))
         self.assertEqual(self.original, self.api.read())
 
@@ -83,6 +84,24 @@ class DeploymentTests(unittest.TestCase):
                                                  io.BytesIO(b'private response'))
         with patch.object(deployment.urllib.request, 'urlopen', side_effect=error):
             with self.assertRaisesRegex(RuntimeError, '^Azure configuration PATCH failed with HTTP 400$'):
+                deployment.request(deployment.RESOURCE, 'PATCH', b'{}')
+
+    def test_wire_payload_omits_nulls_and_preserves_other_fields(self):
+        api = object.__new__(deployment.Azure)
+        api.token = 'test-only'
+        rules = [{'name': 'existing', 'headers': None, 'priority': 100, 'tag': 'Default'}]
+        with patch.object(deployment, 'request') as send:
+            api.write_scm(rules)
+        payload = deployment.json.loads(send.call_args.args[2])
+        self.assertEqual(payload, {'properties': {'scmIpSecurityRestrictions': [
+            {'name': 'existing', 'priority': 100, 'tag': 'Default'}]}})
+        self.assertIsNone(rules[0]['headers'])
+
+    def test_only_machine_error_code_is_exposed(self):
+        error = deployment.urllib.error.HTTPError(deployment.RESOURCE, 400, 'secret', {},
+            io.BytesIO(b'{"error":{"code":"BadRequest","message":"private"}}'))
+        with patch.object(deployment.urllib.request, 'urlopen', side_effect=error):
+            with self.assertRaisesRegex(RuntimeError, r'HTTP 400 \(BadRequest\)$'):
                 deployment.request(deployment.RESOURCE, 'PATCH', b'{}')
 
     def test_cleanup_is_idempotent(self):

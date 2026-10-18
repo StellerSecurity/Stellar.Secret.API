@@ -28,7 +28,16 @@ def request(url, method='GET', data=None, headers=None):
         host = urllib.parse.urlsplit(url).hostname
         operation = ('Azure configuration ' + method if host == 'management.azure.com'
                      else 'Federated authentication')
-        raise RuntimeError(operation + ' failed with HTTP ' + str(error.code)) from None
+        detail = ''
+        if host == 'management.azure.com':
+            try:
+                code = json.load(error).get('error', {}).get('code', '')
+                # Only a short machine-readable code; never print free-form error messages.
+                if isinstance(code, str) and code.isascii() and code.isalnum() and len(code) <= 80:
+                    detail = ' (' + code + ')'
+            except (ValueError, AttributeError, TypeError):
+                pass
+        raise RuntimeError(operation + ' failed with HTTP ' + str(error.code) + detail) from None
 
 
 
@@ -61,6 +70,9 @@ class Azure:
         return request(RESOURCE, headers={'Authorization': 'Bearer ' + self.token})['properties']
 
     def write_scm(self, rules):
+        # Match SDK serialization: omit null fields returned by GET.
+        rules = [{key: value for key, value in rule.items() if value is not None}
+                 for rule in rules]
         request(RESOURCE, 'PATCH', json.dumps({'properties': {
             'scmIpSecurityRestrictions': rules}}).encode(), {
                 'Authorization': 'Bearer ' + self.token, 'Content-Type': 'application/json'})
@@ -119,7 +131,8 @@ def prepare(api, name, state_path):
     baseline = main_rules(before)
     state_path.write_text(json.dumps(baseline))
     rules = before.get('scmIpSecurityRestrictions', []) + [{
-        'name': name, 'action': 'Allow', 'ipAddress': str(address) + '/32', 'priority': 90,
+        'name': name, 'action': 'Allow', 'tag': 'Default',
+        'ipAddress': str(address) + '/32', 'priority': 90,
         'description': 'Temporary deployment runner; removed by always-run cleanup'}]
     try:
         api.write_scm(rules)
