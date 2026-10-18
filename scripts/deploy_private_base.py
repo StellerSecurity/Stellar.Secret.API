@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 import sys
 import time
+import urllib.error
 import urllib.parse
 import urllib.request
 
@@ -18,9 +19,17 @@ RESOURCE = ('https://management.azure.com/subscriptions/' + SUBSCRIPTION
 
 
 def request(url, method='GET', data=None, headers=None):
-    with urllib.request.urlopen(urllib.request.Request(url, data=data, headers=headers or {},
-                                                       method=method), timeout=60) as response:
-        return json.load(response)
+    try:
+        with urllib.request.urlopen(urllib.request.Request(url, data=data, headers=headers or {},
+                                                           method=method), timeout=60) as response:
+            return json.load(response)
+    except urllib.error.HTTPError as error:
+        # Report operation/status, never response bodies, assertions, or authorization headers.
+        host = urllib.parse.urlsplit(url).hostname
+        operation = ('Azure configuration ' + method if host == 'management.azure.com'
+                     else 'Federated authentication')
+        raise RuntimeError(operation + ' failed with HTTP ' + str(error.code)) from None
+
 
 
 def authenticate():
