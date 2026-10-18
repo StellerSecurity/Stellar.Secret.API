@@ -22,6 +22,9 @@ class FakeAzure:
         return copy.deepcopy(self.config)
 
     def write_scm(self, rules):
+        for rule in rules:
+            if any(char in rule.get('description', '') for char in ';,'):
+                raise ValueError("Description cannot contain ';' or ','.")
         self.writes += 1
         self.config['scmIpSecurityRestrictions'] = copy.deepcopy(rules)
         if self.fail_after_write:
